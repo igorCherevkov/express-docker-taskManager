@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            .red {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Список дел</h1>
+        <h1>Запланированные дела:</h1>
+            {% for todo in todosWithDeadline %}
+                <p class='red'>Название дела и deadline: {{ todo.name }}, {{ todo.deadline }}</p>
+                <form action='/completeTodo' method="POST">
+                    <input type="hidden" name="todoId" value={{ todo.id }}>
+                    <button type="submit">Выполнено</button>
+                </form>
+            {% endfor %}
+            {% for todo in todos %}
+                {% if todo.deadline %}
+                    <p>Название дела и deadline: {{ todo.name }}, {{ todo.deadline }}</p>
+                    <form action='/completeTodo' method="POST">
+                        <input type="hidden" name="todoId" value={{ todo.id }}>
+                        <button type="submit">Выполнено</button>
+                    </form>
+                {% else %}
+                    <p>Название дела: {{ todo.name }}</p>
+                    <form action='/completeTodo' method="POST">
+                        <input type="hidden" name="todoId" value={{ todo.id }}>
+                        <button type="submit">Выполнено</button>
+                    </form>
+                {% endif %}
+            {% endfor %}
+        <h1>Выполненные дела:</h1>
+            {% for completedTodo in completedTodos %}
+                {% if completedTodo.deadline %}
+                    <p>Название дела и deadline: {{ completedTodo.name }}, {{ completedTodo.deadline }} </p>
+                    <form action='/deleteTodo' method="POST">
+                        <input type="hidden" name="todoId" value={{ completedTodo.id }}>
+                        <button type="submit">Удалить</button>
+                    </form>
+                {% else %}
+                    <p>Название дела: {{ completedTodo.name }}</p>
+                    <form action='/deleteTodo' method="POST">
+                        <input type="hidden" name="todoId" value={{ completedTodo.id }}>
+                        <button type="submit">Удалить</button>
+                    </form>
+                {% endif %}
+            {% endfor %}
+        <h1>Добавить дело</h1>
+        <form action='/add' method='POST'>
+            <input type="text" name="caseName" placeholder="Название дела">
+            <input type="date" name="deadline" placeholder="Срок выполнения (необязательно)">
+            <button type="submit">Добавить</button>
+        </form>
+    </body>
+</html>
